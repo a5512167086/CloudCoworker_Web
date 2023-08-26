@@ -9,7 +9,16 @@ export const StyledDrawer = styled(Drawer)<DrawerProps>(({ theme }) => ({
     boxSizing: 'border-box',
     width: '60%',
   },
+  '& .drawer_listContainer': {
+    padding: 0,
+  },
   '& .drawer_listButton': {
+    padding: '15px 0',
     textAlign: 'center',
+  },
+  '& .drawer_listLanguageChanger': {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 }));

@@ -10,6 +10,7 @@ import { Box, Button, IconButton } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import { CustomRouteDrawer } from '@components/CustomRouteDrawer';
 import { useState } from 'react';
+import { LanguageChanger } from '@components/LanguageChanger';
 
 export const CustomHeader = () => {
   const container = document.querySelector('#root');
@@ -43,7 +44,7 @@ export const CustomHeader = () => {
               <MenuIcon />
             </IconButton>
             <Typography
-              variant='h5'
+              variant='h6'
               noWrap
               component={Link}
               to={PAGE_PATHS.BASE}
@@ -61,6 +62,7 @@ export const CustomHeader = () => {
                   {t(title)}
                 </Button>
               ))}
+              <LanguageChanger />
             </Box>
           </Box>
         </Toolbar>

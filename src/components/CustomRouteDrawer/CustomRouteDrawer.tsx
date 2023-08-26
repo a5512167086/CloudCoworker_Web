@@ -14,6 +14,7 @@ import {
   useTheme,
   useMediaQuery,
 } from '@mui/material';
+import { LanguageChanger } from '@components/LanguageChanger';
 
 export const CustomRouteDrawer = ({
   routes,
@@ -39,7 +40,7 @@ export const CustomRouteDrawer = ({
   return (
     <StyledDrawer open={open} onClick={handleDrawerToggle}>
       <Box onClick={handleDrawerToggle}>
-        <List>
+        <List className='drawer_listContainer'>
           {routes.map(({ title, link }) => (
             <div key={title}>
               <ListItem disablePadding>
@@ -54,6 +55,10 @@ export const CustomRouteDrawer = ({
               <Divider />
             </div>
           ))}
+          <ListItem className='drawer_listLanguageChanger'>
+            <LanguageChanger />
+          </ListItem>
+          <Divider />
         </List>
       </Box>
     </StyledDrawer>
