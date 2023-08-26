@@ -1,5 +1,11 @@
 {
   "header": {
-    "title": "Cloud Cowork Helper"
+    "title": "Cloud Cowork Helper",
+    "page_title": {
+      "features": "Features",
+      "pricing": "Pricing",
+      "about": "About",
+      "login": "Login"
+    }
   }
 }
