@@ -7,5 +7,23 @@
       "about": "關於",
       "login": "登入"
     }
+  },
+  "login": {
+    "title": "登入",
+    "login_button": "登入",
+    "google_login_button": "使用Google登入",
+    "forgot_password": "忘記密碼?",
+    "without_account_description": "沒有帳戶嗎? 點擊註冊"
+  },
+  "register": {
+    "title": "註冊",
+    "login_button": "註冊",
+    "with_account_description": "已經有帳號了嗎? 點擊登入"
+  },
+  "form": {
+    "email": "電子信箱",
+    "username": "使用者名稱",
+    "password": "使用者密碼",
+    "remember_me": "記得我"
   }
 }

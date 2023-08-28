@@ -6,7 +6,8 @@
       "@components/*": ["src/components/*"],
       "@configs/*": ["src/configs/*"],
       "@containers/*": ["src/containers/*"],
-      "@routes/*": ["src/routes/*"]
+      "@routes/*": ["src/routes/*"],
+      "@utils/*": ["src/utils/*"]
     },
     "types": ["node"],
     "target": "ES2020",

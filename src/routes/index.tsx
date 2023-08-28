@@ -1,4 +1,5 @@
 import { Login } from '@containers/Login';
+import { useRoutes } from 'react-router-dom';
 
 export const PAGE_PATHS = {
   BASE: '/',
@@ -6,13 +7,20 @@ export const PAGE_PATHS = {
   PRICING: '/pricing',
   ABOUT: '/about',
   LOGIN: '/login',
+  REGISTER: '/register',
 };
 
-export const router = [
-  {
-    id: 'login',
-    path: '/login',
-    element: <Login />,
-    auth: false,
-  },
-];
+export const GetRoutes = () => {
+  const routes = useRoutes([
+    {
+      path: PAGE_PATHS.LOGIN,
+      element: <Login />,
+    },
+    {
+      path: PAGE_PATHS.REGISTER,
+      element: <Login />,
+    },
+  ]);
+
+  return routes;
+};

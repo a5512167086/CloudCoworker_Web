@@ -7,5 +7,23 @@
       "about": "About",
       "login": "Login"
     }
+  },
+  "login": {
+    "title": "Sign in",
+    "login_button": "SIGN IN",
+    "google_login_button": "SIGN IN WITH GOOGLE",
+    "forgot_password": "Forgot password?",
+    "without_account_description": "Don't have an account? Sign Up"
+  },
+  "register": {
+    "title": "Sign up",
+    "login_button": "SIGN UP",
+    "with_account_description": "Already have an account? Sign In"
+  },
+  "form": {
+    "email": "Email",
+    "username": "Username",
+    "password": "Password",
+    "remember_me": "Remeber me"
   }
 }
