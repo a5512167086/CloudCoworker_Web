@@ -8,6 +8,7 @@ export const PAGE_PATHS = {
   ABOUT: '/about',
   LOGIN: '/login',
   REGISTER: '/register',
+  FORGOT_PASSWORD: '/forgot-password',
 };
 
 export const GetRoutes = () => {

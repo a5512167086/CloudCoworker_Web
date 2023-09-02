@@ -24,6 +24,8 @@
     "email": "Email",
     "username": "Username",
     "password": "Password",
+    "empty_error_text": "{{key}} cannot be empty",
+    "email_invalid_text": "Invalid email format",
     "remember_me": "Remeber me"
   }
 }

@@ -4,3 +4,9 @@ export const LANGUAGES = {
 };
 
 export const SELECT_LANGUAGES_LIST = [LANGUAGES.EN, LANGUAGES.ZH];
+
+export const LOGIN_FORM_KEYS: { [key: string]: string } = {
+  EMAIL: 'email',
+  PASSWORD: 'password',
+  USER_NAME: 'username',
+};

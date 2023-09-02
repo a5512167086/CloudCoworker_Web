@@ -24,6 +24,8 @@
     "email": "電子信箱",
     "username": "使用者名稱",
     "password": "使用者密碼",
+    "empty_error_text": "{{key}}不得為空",
+    "email_invalid_text": "電子信箱格式錯誤",
     "remember_me": "記得我"
   }
 }

@@ -2,7 +2,7 @@ import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { LoginFlow, getLoginTitleText } from './login.config';
 import { PAGE_PATHS } from '@routes/index';
-import { isEmpty } from '@utils/helpers';
+import { isEmpty, validateLoginForm } from '@utils/helpers';
 import { LoginFormData, Status } from '@configs/type';
 import { StyledLogin } from './login.style';
 import { CustomLink } from '@components/CustomLink';
@@ -16,17 +16,24 @@ import {
   Checkbox,
   Grid,
 } from '@mui/material';
+import { LOGIN_FORM_KEYS } from '@configs/common';
+
+const initLoginFormState: LoginFormData = {
+  username: { value: '', status: Status.Idle, errorText: '' },
+  email: { value: '', status: Status.Idle, errorText: '' },
+  password: { value: '', status: Status.Idle, errorText: '' },
+};
 
 export const Login = () => {
   const { pathname } = useLocation();
   const { t } = useTranslation();
   const [currentFlow, setCurrentFlow] = useState<LoginFlow | null>(null);
-  const [formData, setFormData] = useState<LoginFormData>({
-    username: { value: '', status: Status.Idle, errorText: '' },
-    email: { value: '', status: Status.Idle, errorText: '' },
-    password: { value: '', status: Status.Idle, errorText: '' },
-  });
+  const [formData, setFormData] = useState<LoginFormData>(initLoginFormState);
   const [isRemeberMe, setIsRemeberMe] = useState(false);
+
+  const initLoginFormData = () => {
+    setFormData({ ...initLoginFormState });
+  };
 
   useEffect(() => {
     if (pathname === PAGE_PATHS.REGISTER) {
@@ -35,16 +42,8 @@ export const Login = () => {
     if (pathname === PAGE_PATHS.LOGIN) {
       setCurrentFlow(LoginFlow.Login);
     }
+    initLoginFormData();
   }, [pathname]);
-
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
-  };
 
   const handleLoginFormChange = (
     event: ChangeEvent<HTMLInputElement>,
@@ -59,6 +58,28 @@ export const Login = () => {
 
   const handleCheckRememberMe = () => {
     setIsRemeberMe((prev) => !prev);
+  };
+
+  const handleLoginFormBlur = (key: keyof LoginFormData) => {
+    const { status, errorText } = validateLoginForm(key, formData[key].value);
+    setFormData((prev) => {
+      const currentFormData = prev;
+      currentFormData[key] = {
+        ...currentFormData[key],
+        status,
+        errorText,
+      };
+
+      return { ...currentFormData };
+    });
+  };
+
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    Object.keys(LOGIN_FORM_KEYS).forEach((key: string) => {
+      const keyValue = LOGIN_FORM_KEYS[key];
+      handleLoginFormBlur(keyValue as keyof LoginFormData);
+    });
   };
 
   if (isEmpty(currentFlow)) {
@@ -82,18 +103,26 @@ export const Login = () => {
               required
               fullWidth
               error={formData.username.status === Status.Error}
-              name='username'
+              helperText={t(formData.username.errorText, {
+                key: t('form.username'),
+              })}
+              name={LOGIN_FORM_KEYS.USER_NAME}
               label={t('form.username')}
+              type='text'
+              id={LOGIN_FORM_KEYS.USER_NAME}
+              value={formData.username.value}
+              autoComplete={LOGIN_FORM_KEYS.USER_NAME}
               onChange={(event) => {
                 handleLoginFormChange(
                   event as ChangeEvent<HTMLInputElement>,
-                  'username',
+                  LOGIN_FORM_KEYS.USER_NAME as keyof LoginFormData,
                 );
               }}
-              type='text'
-              id='username'
-              value={formData.username.value}
-              autoComplete='username'
+              onBlur={() => {
+                handleLoginFormBlur(
+                  LOGIN_FORM_KEYS.USER_NAME as keyof LoginFormData,
+                );
+              }}
             />
           )}
           <TextField
@@ -101,36 +130,50 @@ export const Login = () => {
             required
             fullWidth
             error={formData.email.status === Status.Error}
-            id='email'
+            helperText={t(formData.email.errorText, {
+              key: t('form.email'),
+            })}
+            id={LOGIN_FORM_KEYS.EMAIL}
             value={formData.email.value}
             label={t('form.email')}
+            type='email'
+            name={LOGIN_FORM_KEYS.EMAIL}
+            autoComplete={LOGIN_FORM_KEYS.EMAIL}
             onChange={(event) => {
               handleLoginFormChange(
                 event as ChangeEvent<HTMLInputElement>,
-                'email',
+                LOGIN_FORM_KEYS.EMAIL as keyof LoginFormData,
               );
             }}
-            name='email'
-            autoComplete='email'
-            autoFocus
+            onBlur={() => {
+              handleLoginFormBlur(LOGIN_FORM_KEYS.EMAIL as keyof LoginFormData);
+            }}
           />
           <TextField
             margin='normal'
             required
             fullWidth
             error={formData.password.status === Status.Error}
-            name='password'
+            helperText={t(formData.password.errorText, {
+              key: t('form.password'),
+            })}
+            name={LOGIN_FORM_KEYS.PASSWORD}
             label={t('form.password')}
+            type='password'
+            id={LOGIN_FORM_KEYS.PASSWORD}
+            value={formData.password.value}
+            autoComplete={LOGIN_FORM_KEYS.PASSWORD}
             onChange={(event) => {
               handleLoginFormChange(
                 event as ChangeEvent<HTMLInputElement>,
-                'password',
+                LOGIN_FORM_KEYS.PASSWORD as keyof LoginFormData,
               );
             }}
-            type='password'
-            id='password'
-            value={formData.password.value}
-            autoComplete='password'
+            onBlur={() => {
+              handleLoginFormBlur(
+                LOGIN_FORM_KEYS.PASSWORD as keyof LoginFormData,
+              );
+            }}
           />
           {currentFlow === LoginFlow.Login && (
             <FormControlLabel
@@ -154,7 +197,7 @@ export const Login = () => {
           <Grid container>
             <Grid item xs>
               {currentFlow === LoginFlow.Login && (
-                <CustomLink variant='body2' to={''}>
+                <CustomLink variant='body2' to={PAGE_PATHS.FORGOT_PASSWORD}>
                   {t('login.forgot_password')}
                 </CustomLink>
               )}
