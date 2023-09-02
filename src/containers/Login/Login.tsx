@@ -184,7 +184,7 @@ export const Login = () => {
                   color='primary'
                 />
               }
-              label='Remember me'
+              label={t('form.remember_me')}
             />
           )}
           <Button
