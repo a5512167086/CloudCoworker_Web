@@ -4,8 +4,7 @@ import { useRoutes } from 'react-router-dom';
 export const PAGE_PATHS = {
   BASE: '/',
   FEATURES: '/features',
-  PRICING: '/pricing',
-  ABOUT: '/about',
+  ABOUT: 'https://github.com/a5512167086',
   LOGIN: '/login',
   REGISTER: '/register',
   FORGOT_PASSWORD: '/forgot-password',

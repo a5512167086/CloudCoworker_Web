@@ -5,10 +5,7 @@ export const ROUTES_WITHOUT_AUTH = [
     title: 'header.page_title.features',
     link: PAGE_PATHS.FEATURES,
   },
-  {
-    title: 'header.page_title.pricing',
-    link: PAGE_PATHS.PRICING,
-  },
+
   {
     title: 'header.page_title.about',
     link: PAGE_PATHS.ABOUT,

@@ -17,8 +17,13 @@ export const CustomHeader = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
-  const handleRedirect = (link: string) => {
-    navigate(link);
+
+  const handleRedirect = (title: string, link: string) => {
+    if (title === 'header.page_title.about') {
+      window.location.href = link;
+    } else {
+      navigate(link);
+    }
   };
 
   const handleDrawerToggle = () => {
@@ -57,7 +62,7 @@ export const CustomHeader = () => {
                   key={title}
                   className='header_link'
                   onClick={() => {
-                    handleRedirect(link);
+                    handleRedirect(title, link);
                   }}>
                   {t(title)}
                 </Button>
