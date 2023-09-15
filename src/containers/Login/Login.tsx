@@ -17,6 +17,9 @@ import {
   Grid,
 } from '@mui/material';
 import { LOGIN_FORM_KEYS } from '@configs/common';
+import { useDispatch } from 'react-redux';
+import { fetchUserData } from '@store/modules/userSlice';
+import { AppDispatch } from '@store/index';
 
 const initLoginFormState: LoginFormData = {
   username: { value: '', status: Status.Idle, errorText: '' },
@@ -25,6 +28,7 @@ const initLoginFormState: LoginFormData = {
 };
 
 export const Login = () => {
+  const dispatch = useDispatch<AppDispatch>();
   const { pathname } = useLocation();
   const { t } = useTranslation();
   const [currentFlow, setCurrentFlow] = useState<LoginFlow | null>(null);
@@ -32,17 +36,25 @@ export const Login = () => {
   const [isRemeberMe, setIsRemeberMe] = useState(false);
 
   const initLoginFormData = () => {
-    setFormData({ ...initLoginFormState });
+    setFormData(() => {
+      const currentData = { ...initLoginFormState };
+      currentData.username.value = '';
+      currentData.email.value = '';
+      currentData.password.value = '';
+
+      return { ...currentData };
+    });
   };
 
   useEffect(() => {
+    initLoginFormData();
+
     if (pathname === PAGE_PATHS.REGISTER) {
       setCurrentFlow(LoginFlow.Register);
     }
     if (pathname === PAGE_PATHS.LOGIN) {
       setCurrentFlow(LoginFlow.Login);
     }
-    initLoginFormData();
   }, [pathname]);
 
   const handleLoginFormChange = (
@@ -58,6 +70,18 @@ export const Login = () => {
 
   const handleCheckRememberMe = () => {
     setIsRemeberMe((prev) => !prev);
+  };
+
+  const checkIsValid = () => {
+    for (const key in formData) {
+      if (
+        key === LOGIN_FORM_KEYS.USER_NAME &&
+        currentFlow !== LoginFlow.Register
+      ) {
+        continue;
+      }
+      return formData[key as keyof LoginFormData].status === Status.Success;
+    }
   };
 
   const handleLoginFormBlur = (key: keyof LoginFormData) => {
@@ -80,6 +104,13 @@ export const Login = () => {
       const keyValue = LOGIN_FORM_KEYS[key];
       handleLoginFormBlur(keyValue as keyof LoginFormData);
     });
+    const isValid = checkIsValid();
+    if (!isValid) {
+      return;
+    }
+    if (currentFlow === LoginFlow.Login) {
+      dispatch(fetchUserData(formData));
+    }
   };
 
   if (isEmpty(currentFlow)) {

@@ -7,7 +7,8 @@
       "@configs/*": ["src/configs/*"],
       "@containers/*": ["src/containers/*"],
       "@routes/*": ["src/routes/*"],
-      "@utils/*": ["src/utils/*"]
+      "@utils/*": ["src/utils/*"],
+      "@store/*": ["src/store/*"]
     },
     "types": ["node"],
     "target": "ES2020",
