@@ -51,7 +51,14 @@ export const userSlice = createSlice({
     status: 'idle',
     errorCode: null as number | null,
   },
-  reducers: {},
+  reducers: {
+    initUserStatus: (state) => {
+      state.status = Status.Idle;
+    },
+    initUserErrorCode: (state) => {
+      state.errorCode = null;
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(fetchUserData.pending, (state) => {
       state.status = Status.Idle;
@@ -84,4 +91,5 @@ export const userSlice = createSlice({
 });
 
 export { fetchUserData, registerUser };
+export const { initUserStatus, initUserErrorCode } = userSlice.actions;
 export default userSlice.reducer;

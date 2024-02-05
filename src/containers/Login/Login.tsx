@@ -1,5 +1,5 @@
 import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { LoginFlow, getLoginTitleText } from './login.config';
 import { PAGE_PATHS } from '@routes/index';
 import { isEmpty, validateLoginForm } from '@utils/helpers';
@@ -17,9 +17,14 @@ import {
   Grid,
 } from '@mui/material';
 import { LOGIN_FORM_KEYS } from '@configs/common';
-import { useDispatch } from 'react-redux';
-import { fetchUserData, registerUser } from '@store/modules/userSlice';
-import { AppDispatch } from '@store/index';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  fetchUserData,
+  initUserErrorCode,
+  initUserStatus,
+  registerUser,
+} from '@store/modules/userSlice';
+import { AppDispatch, RootState } from '@store/index';
 
 const initLoginFormState: LoginFormData = {
   username: { value: '', status: Status.Idle, errorText: '' },
@@ -29,7 +34,9 @@ const initLoginFormState: LoginFormData = {
 
 export const Login = () => {
   const dispatch = useDispatch<AppDispatch>();
+  const { status } = useSelector((state: RootState) => state.user);
   const { pathname } = useLocation();
+  const navigate = useNavigate();
   const { t } = useTranslation();
   const [currentFlow, setCurrentFlow] = useState<LoginFlow | null>(null);
   const [formData, setFormData] = useState<LoginFormData>(initLoginFormState);
@@ -48,6 +55,8 @@ export const Login = () => {
 
   useEffect(() => {
     initLoginFormData();
+    dispatch(initUserStatus());
+    dispatch(initUserErrorCode());
 
     if (pathname === PAGE_PATHS.REGISTER) {
       setCurrentFlow(LoginFlow.Register);
@@ -56,6 +65,12 @@ export const Login = () => {
       setCurrentFlow(LoginFlow.Login);
     }
   }, [pathname]);
+
+  useEffect(() => {
+    if (currentFlow === LoginFlow.Register && status === Status.Success) {
+      navigate(PAGE_PATHS.LOGIN);
+    }
+  }, [status, currentFlow]);
 
   const handleLoginFormChange = (
     event: ChangeEvent<HTMLInputElement>,
