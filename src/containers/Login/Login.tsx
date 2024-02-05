@@ -18,7 +18,7 @@ import {
 } from '@mui/material';
 import { LOGIN_FORM_KEYS } from '@configs/common';
 import { useDispatch } from 'react-redux';
-import { fetchUserData } from '@store/modules/userSlice';
+import { fetchUserData, registerUser } from '@store/modules/userSlice';
 import { AppDispatch } from '@store/index';
 
 const initLoginFormState: LoginFormData = {
@@ -110,6 +110,9 @@ export const Login = () => {
     }
     if (currentFlow === LoginFlow.Login) {
       dispatch(fetchUserData(formData));
+    }
+    if (currentFlow === LoginFlow.Register) {
+      dispatch(registerUser(formData));
     }
   };
 

@@ -25,3 +25,9 @@ export const validateLoginForm = (key: string, value: string | number) => {
 
   return { status: Status.Success, errorText: '' };
 };
+
+export const checkIsAuth = (
+  userName: string,
+  userEmail: string,
+  userToken: string,
+) => userName && userEmail && userToken;

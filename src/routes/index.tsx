@@ -1,5 +1,8 @@
 import { Login } from '@containers/Login';
-import { useRoutes } from 'react-router-dom';
+import { RootState } from '@store/index';
+import { checkIsAuth } from '@utils/helpers';
+import { useSelector } from 'react-redux';
+import { Navigate, useRoutes } from 'react-router-dom';
 
 export const PAGE_PATHS = {
   BASE: '/',
@@ -11,14 +14,20 @@ export const PAGE_PATHS = {
 };
 
 export const GetRoutes = () => {
+  const { userName, userEmail, userToken } = useSelector(
+    (state: RootState) => state.user,
+  );
+
+  const isAuth = checkIsAuth(userName, userEmail, userToken!);
+
   const routes = useRoutes([
     {
       path: PAGE_PATHS.LOGIN,
-      element: <Login />,
+      element: isAuth ? <Navigate to={PAGE_PATHS.BASE} replace /> : <Login />,
     },
     {
       path: PAGE_PATHS.REGISTER,
-      element: <Login />,
+      element: isAuth ? <Navigate to={PAGE_PATHS.BASE} replace /> : <Login />,
     },
   ]);
 

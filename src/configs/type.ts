@@ -9,3 +9,7 @@ export type LoginFormData = {
   email: { value: string; status: Status; errorText: string };
   password: { value: string; status: Status; errorText: string };
 };
+
+export type RejectResponseData = {
+  statusCode: number;
+};
