@@ -32,5 +32,9 @@
       "title": "Creating the best cloud collaboration platform for remote work solutions",
       "description": "Make it easier for you and your team members to work together, stay connected and productive, and work closer together."
     }
+  },
+  "footer": {
+    "copyRight": "Copyright © ",
+    "developerName": "Shin"
   }
 }

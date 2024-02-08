@@ -32,5 +32,9 @@
       "title": "為遠距工作打造最棒的雲端協作平台解決方案",
       "description": "讓您與團隊成員更輕鬆地協同工作，保持溝通連結並提高生產力，讓工作距離更加方便靠近"
     }
+  },
+  "footer": {
+    "copyRight": "Copyright © ",
+    "developerName": "Shin"
   }
 }
