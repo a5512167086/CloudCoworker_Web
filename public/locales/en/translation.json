@@ -4,7 +4,8 @@
     "page_title": {
       "features": "Features",
       "about": "About",
-      "login": "Login"
+      "login": "Login",
+      "logout": "Logout"
     }
   },
   "login": {

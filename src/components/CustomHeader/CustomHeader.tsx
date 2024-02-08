@@ -3,24 +3,37 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom';
-import { ROUTES_WITHOUT_AUTH } from './customHeader.config';
+import { ROUTES_WITHOUT_AUTH, ROUTES_WITH_AUTH } from './customHeader.config';
 import { PAGE_PATHS } from '@routes/index';
 import { StyledHeader } from './customHeader.style';
 import { Box, Button, IconButton } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import { CustomRouteDrawer } from '@components/CustomRouteDrawer';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { LanguageChanger } from '@components/LanguageChanger';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '@store/index';
+import { checkIsAuth } from '@utils/helpers';
+import { initUserState } from '@store/modules/userSlice';
 
 export const CustomHeader = () => {
   const container = document.querySelector('#root');
-  const { t } = useTranslation();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { t } = useTranslation();
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
+  const { userName, userEmail, userToken } = useSelector(
+    (state: RootState) => state.user,
+  );
+  const [isAuth, setIsAuth] = useState(false);
 
   const handleRedirect = (title: string, link: string) => {
     if (title === 'header.page_title.about') {
       window.location.href = link;
+    } else if (isAuth && title === ROUTES_WITH_AUTH[0].title && link === '') {
+      // handle logout
+      dispatch(initUserState());
+      navigate(PAGE_PATHS.BASE);
     } else {
       navigate(link);
     }
@@ -33,6 +46,14 @@ export const CustomHeader = () => {
   const handleDrawerClose = () => {
     setIsDrawerOpen(false);
   };
+
+  useEffect(() => {
+    if (checkIsAuth(userName, userEmail, userToken!)) {
+      setIsAuth(true);
+    } else {
+      setIsAuth(false);
+    }
+  }, [userName, userEmail, userToken]);
 
   return (
     <StyledHeader position='static'>
@@ -57,16 +78,27 @@ export const CustomHeader = () => {
               {t('header.title')}
             </Typography>
             <Box className='header_linkContainer'>
-              {ROUTES_WITHOUT_AUTH.map(({ title, link }) => (
-                <Button
-                  key={title}
-                  className='header_link'
-                  onClick={() => {
-                    handleRedirect(title, link);
-                  }}>
-                  {t(title)}
-                </Button>
-              ))}
+              {isAuth
+                ? ROUTES_WITH_AUTH.map(({ title, link }) => (
+                    <Button
+                      key={title}
+                      className='header_link'
+                      onClick={() => {
+                        handleRedirect(title, link);
+                      }}>
+                      {t(title)}
+                    </Button>
+                  ))
+                : ROUTES_WITHOUT_AUTH.map(({ title, link }) => (
+                    <Button
+                      key={title}
+                      className='header_link'
+                      onClick={() => {
+                        handleRedirect(title, link);
+                      }}>
+                      {t(title)}
+                    </Button>
+                  ))}
               <LanguageChanger />
             </Box>
           </Box>
@@ -80,7 +112,7 @@ export const CustomHeader = () => {
           }}
           handleDrawerToggle={handleDrawerToggle}
           handleDrawerClose={handleDrawerClose}
-          routes={ROUTES_WITHOUT_AUTH}
+          routes={isAuth ? ROUTES_WITH_AUTH : ROUTES_WITHOUT_AUTH}
         />
       </Container>
     </StyledHeader>

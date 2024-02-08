@@ -58,6 +58,14 @@ export const userSlice = createSlice({
     initUserErrorCode: (state) => {
       state.errorCode = null;
     },
+    initUserState: (state) => {
+      state.userName = '';
+      state.userEmail = '';
+      state.userToken = null;
+      state.userName = '';
+      state.status = Status.Idle;
+      state.errorCode = null;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(fetchUserData.pending, (state) => {
@@ -91,5 +99,6 @@ export const userSlice = createSlice({
 });
 
 export { fetchUserData, registerUser };
-export const { initUserStatus, initUserErrorCode } = userSlice.actions;
+export const { initUserStatus, initUserErrorCode, initUserState } =
+  userSlice.actions;
 export default userSlice.reducer;

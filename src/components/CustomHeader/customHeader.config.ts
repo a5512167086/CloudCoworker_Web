@@ -15,3 +15,10 @@ export const ROUTES_WITHOUT_AUTH = [
     link: PAGE_PATHS.LOGIN,
   },
 ];
+
+export const ROUTES_WITH_AUTH = [
+  {
+    title: 'header.page_title.logout',
+    link: '',
+  },
+];
