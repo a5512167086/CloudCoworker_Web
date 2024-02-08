@@ -124,7 +124,7 @@ export const Login = () => {
       return;
     }
     if (currentFlow === LoginFlow.Login) {
-      dispatch(fetchUserData(formData));
+      dispatch(fetchUserData({ ...formData, isRemeberMe }));
     }
     if (currentFlow === LoginFlow.Register) {
       dispatch(registerUser(formData));

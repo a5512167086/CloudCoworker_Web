@@ -10,6 +10,13 @@ export type LoginFormData = {
   password: { value: string; status: Status; errorText: string };
 };
 
+export type LoginFormDataWithRemember = {
+  username: { value: string; status: Status; errorText: string };
+  email: { value: string; status: Status; errorText: string };
+  password: { value: string; status: Status; errorText: string };
+  isRemeberMe: boolean;
+};
+
 export type RejectResponseData = {
   statusCode: number;
 };
