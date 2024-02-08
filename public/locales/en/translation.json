@@ -26,5 +26,11 @@
     "empty_error_text": "{{key}} cannot be empty",
     "email_invalid_text": "Invalid email format",
     "remember_me": "Remeber me"
+  },
+  "main": {
+    "hero": {
+      "title": "Creating the best cloud collaboration platform for remote work solutions",
+      "description": "Make it easier for you and your team members to work together, stay connected and productive, and work closer together."
+    }
   }
 }

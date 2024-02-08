@@ -1,4 +1,5 @@
 import { Login } from '@containers/Login';
+import { Main } from '@containers/Main';
 import { RootState } from '@store/index';
 import { checkIsAuth } from '@utils/helpers';
 import { useSelector } from 'react-redux';
@@ -21,6 +22,10 @@ export const GetRoutes = () => {
   const isAuth = checkIsAuth(userName, userEmail, userToken!);
 
   const routes = useRoutes([
+    {
+      path: PAGE_PATHS.BASE,
+      element: <Main />,
+    },
     {
       path: PAGE_PATHS.LOGIN,
       element: isAuth ? <Navigate to={PAGE_PATHS.BASE} replace /> : <Login />,
