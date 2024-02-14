@@ -1,6 +1,7 @@
 import { CustomHero } from '@components/CustomHero';
 import { StyledMain } from './main.style';
 import mainHeroImage from '@assets/images/companyHeroBackground.jpg';
+import { FeatureCardSection } from '@components/FeatureCardSection';
 
 export const Main = () => {
   const mainContent = {
@@ -15,6 +16,7 @@ export const Main = () => {
         title={mainContent.heroTitle}
         descrption={mainContent.heroDescription}
       />
+      <FeatureCardSection />
     </StyledMain>
   );
 };
