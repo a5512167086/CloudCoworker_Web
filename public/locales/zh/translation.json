@@ -4,6 +4,7 @@
     "page_title": {
       "features": "功能",
       "about": "關於",
+      "manage": "管理",
       "login": "登入",
       "logout": "登出"
     }
@@ -37,5 +38,14 @@
   "footer": {
     "copyRight": "Copyright © ",
     "developerName": "Shin"
+  },
+  "manage": {
+    "title1": "建立一個新的組織",
+    "button1": "送出",
+    "or": "或者...",
+    "title2": "加入一個現有的組織",
+    "button2": "加入",
+    "organizationName": "組織名稱",
+    "inviteCode": "邀請碼"
   }
 }

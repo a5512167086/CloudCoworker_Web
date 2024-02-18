@@ -1,5 +1,6 @@
 import { Login } from '@containers/Login';
 import { Main } from '@containers/Main';
+import { Manage } from '@containers/Manage';
 import { RootState } from '@store/index';
 import { checkIsAuth } from '@utils/helpers';
 import { useSelector } from 'react-redux';
@@ -12,6 +13,7 @@ export const PAGE_PATHS = {
   LOGIN: '/login',
   REGISTER: '/register',
   FORGOT_PASSWORD: '/forgot-password',
+  MANAGE: '/manage',
 };
 
 export const GetRoutes = () => {
@@ -26,6 +28,7 @@ export const GetRoutes = () => {
       path: PAGE_PATHS.BASE,
       element: <Main />,
     },
+    // private routes
     {
       path: PAGE_PATHS.LOGIN,
       element: isAuth ? <Navigate to={PAGE_PATHS.BASE} replace /> : <Login />,
@@ -33,6 +36,10 @@ export const GetRoutes = () => {
     {
       path: PAGE_PATHS.REGISTER,
       element: isAuth ? <Navigate to={PAGE_PATHS.BASE} replace /> : <Login />,
+    },
+    {
+      path: PAGE_PATHS.MANAGE,
+      element: !isAuth ? <Navigate to={PAGE_PATHS.BASE} replace /> : <Manage />,
     },
   ]);
 

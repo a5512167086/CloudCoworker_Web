@@ -28,9 +28,9 @@ export const CustomHeader = () => {
   const [isAuth, setIsAuth] = useState(false);
 
   const handleRedirect = (title: string, link: string) => {
-    if (title === 'header.page_title.about') {
+    if (title.includes('about')) {
       window.location.href = link;
-    } else if (isAuth && title === ROUTES_WITH_AUTH[0].title && link === '') {
+    } else if (isAuth && title.includes('logout') && link === '') {
       // handle logout
       dispatch(initUserState());
       navigate(PAGE_PATHS.BASE);

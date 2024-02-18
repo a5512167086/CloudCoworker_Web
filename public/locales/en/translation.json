@@ -4,6 +4,7 @@
     "page_title": {
       "features": "Features",
       "about": "About",
+      "manage": "Manage",
       "login": "Login",
       "logout": "Logout"
     }
@@ -37,5 +38,14 @@
   "footer": {
     "copyRight": "Copyright © ",
     "developerName": "Shin"
+  },
+  "manage": {
+    "title1": "Create a new organization",
+    "button1": "Submit",
+    "or": "Or ...",
+    "title2": "Join an existing organization",
+    "button2": "Join",
+    "organizationName": "Organization Name",
+    "inviteCode": "Invite Code"
   }
 }
