@@ -43,7 +43,7 @@ const App = () => {
         paddingBottom: '80px',
       }}>
       <CustomHeader />
-      <GetRoutes />
+      {!initState && <GetRoutes />}
       <CustomFooter />
     </Container>
   );
