@@ -17,6 +17,11 @@ export type LoginFormDataWithRemember = {
   isRemeberMe: boolean;
 };
 
+export type ManageFormData = {
+  organizationName?: { value: string; status: Status; errorText: string };
+  inviteCode?: { value: string; status: Status; errorText: string };
+};
+
 export type RejectResponseData = {
   statusCode: number;
 };

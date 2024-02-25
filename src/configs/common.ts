@@ -10,3 +10,8 @@ export const LOGIN_FORM_KEYS: { [key: string]: string } = {
   PASSWORD: 'password',
   USER_NAME: 'username',
 };
+
+export const MANAGE_FORM_KEYS: { [key: string]: string } = {
+  ORGANIZATION_NAME: 'organizationName',
+  INVITE_CODE: 'inviteCode',
+};
