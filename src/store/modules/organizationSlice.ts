@@ -3,6 +3,7 @@ import { RejectResponseData, Status } from '@configs/type';
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { isAxiosError } from 'axios';
 import { RootState } from '..';
+import { setUserOrganization } from './userSlice';
 
 const createOrganization = createAsyncThunk(
   'organization/createOrganization',
@@ -54,6 +55,27 @@ const joinOrganization = createAsyncThunk(
 //   async (token, { rejectWithValue }) => {},
 // );
 
+const getUserOrganization = createAsyncThunk(
+  'organization/getUserOrganization',
+  async (_: void, { dispatch, getState, rejectWithValue }) => {
+    try {
+      const state = getState();
+      const { userToken } = (state as RootState).user;
+      const response = await customRequest.get(
+        `/api/v1/users/getOrganization`,
+        { headers: { Authorization: `Bearer ${userToken}` } },
+      );
+      const { organizationId, isOwner } = response.data;
+      dispatch(setUserOrganization({ organizationId, isOwner }));
+      return response.data;
+    } catch (error) {
+      if (isAxiosError(error)) {
+        return rejectWithValue(error.response!.data);
+      }
+    }
+  },
+);
+
 export const organizationSlice = createSlice({
   name: 'organization',
   initialState: {
@@ -61,6 +83,7 @@ export const organizationSlice = createSlice({
     organizationName: '',
     organizationOwner: '',
     organizationMembers: [],
+    organizationInviteCode: '',
     status: 'idle',
     errorCode: null as number | null,
   },
@@ -85,14 +108,29 @@ export const organizationSlice = createSlice({
       state.status = Status.Error;
       state.errorCode = statusCode;
     });
-    builder.addCase(joinOrganization.pending, (state) => {
+    builder.addCase(getUserOrganization.pending, (state) => {
       state.status = Status.Idle;
     });
-    builder.addCase(joinOrganization.fulfilled, (state) => {
+    builder.addCase(getUserOrganization.fulfilled, (state, actions) => {
+      console.log('test');
+      console.log(actions.payload);
+      const {
+        organizationId,
+        organizationMembers,
+        organizationName,
+        organizationOwner,
+        organizationInviteCode,
+      } = actions.payload;
+
+      state.organizationId = organizationId;
+      state.organizationName = organizationName;
+      state.organizationOwner = organizationOwner;
+      state.organizationMembers = organizationMembers;
+      state.organizationInviteCode = organizationInviteCode;
       state.status = Status.Success;
       state.errorCode = null;
     });
-    builder.addCase(joinOrganization.rejected, (state, actions) => {
+    builder.addCase(getUserOrganization.rejected, (state, actions) => {
       const { statusCode } = actions.payload as RejectResponseData;
       state.status = Status.Error;
       state.errorCode = statusCode;
@@ -105,6 +143,7 @@ export {
   // deleteOrganization,
   joinOrganization,
   // leaveOrganization,
+  getUserOrganization,
 };
 export const { initOrganizationStatus, initOrganizationErrorCode } =
   organizationSlice.actions;

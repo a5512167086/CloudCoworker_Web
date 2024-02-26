@@ -72,6 +72,8 @@ export const userSlice = createSlice({
     userName: '',
     userEmail: '',
     userToken: null as string | null,
+    userOrganization: '',
+    organizationOwner: false,
     status: 'idle',
     errorCode: null as number | null,
   },
@@ -92,10 +94,10 @@ export const userSlice = createSlice({
       sessionStorage.removeItem('userToken');
       localStorage.removeItem('userToken');
     },
-    setUser: (state, actions) => {
-      const { userEmail, userName } = actions.payload;
-      state.userEmail = userEmail;
-      state.userName = userName;
+    setUserOrganization: (state, actions) => {
+      const { organizationId, isOwner } = actions.payload;
+      state.userOrganization = organizationId;
+      state.organizationOwner = isOwner;
     },
   },
   extraReducers: (builder) => {
@@ -126,6 +128,9 @@ export const userSlice = createSlice({
       state.status = Status.Error;
       state.errorCode = statusCode;
     });
+    builder.addCase(checkUserLogin.pending, (state) => {
+      state.status = Status.Idle;
+    });
     builder.addCase(checkUserLogin.fulfilled, (state, actions) => {
       const { userEmail, userName, token } = actions.payload;
       state.userEmail = userEmail;
@@ -141,6 +146,10 @@ export const userSlice = createSlice({
 });
 
 export { fetchUserData, registerUser, checkUserLogin };
-export const { initUserStatus, initUserErrorCode, initUserState } =
-  userSlice.actions;
+export const {
+  initUserStatus,
+  initUserErrorCode,
+  initUserState,
+  setUserOrganization,
+} = userSlice.actions;
 export default userSlice.reducer;
