@@ -1,26 +1,20 @@
 import { customRequest } from '@configs/api';
-import {
-  LoginFormDataWithRemember,
-  RejectResponseData,
-  Status,
-} from '@configs/type';
+import { RejectResponseData, Status } from '@configs/type';
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { isAxiosError } from 'axios';
+import { RootState } from '..';
 
-const fetchUserData = createAsyncThunk(
-  'user/fetchUserData',
-  async (userInfo: LoginFormDataWithRemember, { rejectWithValue }) => {
-    const user = {
-      email: userInfo.email.value,
-      password: userInfo.password.value,
-    };
+const createOrganization = createAsyncThunk(
+  'organization/createOrganization',
+  async (organizationName: string, { getState, rejectWithValue }) => {
     try {
-      const response = await customRequest.post(`/api/v1/users/login`, user);
-      if (userInfo.isRemeberMe) {
-        localStorage.setItem('userToken', response.data.token);
-      } else {
-        sessionStorage.setItem('userToken', response.data.token);
-      }
+      const state = getState();
+      const { userToken } = (state as RootState).user;
+      const response = await customRequest.post(
+        `/api/v1/organization`,
+        { organizationName },
+        { headers: { Authorization: `Bearer ${userToken}` } },
+      );
       return response.data;
     } catch (error) {
       if (isAxiosError(error)) {
@@ -30,29 +24,75 @@ const fetchUserData = createAsyncThunk(
   },
 );
 
+// const deleteOrganization = createAsyncThunk(
+//   'organization/createOrganization',
+//   async (token, { rejectWithValue }) => {},
+// );
+
+const joinOrganization = createAsyncThunk(
+  'organization/joinOrganization',
+  async (inviteCode: string, { getState, rejectWithValue }) => {
+    try {
+      const state = getState();
+      const { userToken } = (state as RootState).user;
+      const response = await customRequest.post(
+        `/api/v1/organization/join`,
+        { inviteCode },
+        { headers: { Authorization: `Bearer ${userToken}` } },
+      );
+      return response.data;
+    } catch (error) {
+      if (isAxiosError(error)) {
+        return rejectWithValue(error.response!.data);
+      }
+    }
+  },
+);
+
+// const leaveOrganization = createAsyncThunk(
+//   'organization/createOrganization',
+//   async (token, { rejectWithValue }) => {},
+// );
+
 export const organizationSlice = createSlice({
-  name: 'user',
+  name: 'organization',
   initialState: {
+    organizationId: '',
+    organizationName: '',
+    organizationOwner: '',
+    organizationMembers: [],
     status: 'idle',
     errorCode: null as number | null,
   },
   reducers: {
-    initUserStatus: (state) => {
+    initOrganizationStatus: (state) => {
       state.status = Status.Idle;
     },
-    initUserErrorCode: (state) => {
+    initOrganizationErrorCode: (state) => {
       state.errorCode = null;
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(fetchUserData.pending, (state) => {
+    builder.addCase(createOrganization.pending, (state) => {
       state.status = Status.Idle;
     });
-    builder.addCase(fetchUserData.fulfilled, (state) => {
+    builder.addCase(createOrganization.fulfilled, (state) => {
       state.status = Status.Success;
       state.errorCode = null;
     });
-    builder.addCase(fetchUserData.rejected, (state, actions) => {
+    builder.addCase(createOrganization.rejected, (state, actions) => {
+      const { statusCode } = actions.payload as RejectResponseData;
+      state.status = Status.Error;
+      state.errorCode = statusCode;
+    });
+    builder.addCase(joinOrganization.pending, (state) => {
+      state.status = Status.Idle;
+    });
+    builder.addCase(joinOrganization.fulfilled, (state) => {
+      state.status = Status.Success;
+      state.errorCode = null;
+    });
+    builder.addCase(joinOrganization.rejected, (state, actions) => {
       const { statusCode } = actions.payload as RejectResponseData;
       state.status = Status.Error;
       state.errorCode = statusCode;
@@ -60,6 +100,12 @@ export const organizationSlice = createSlice({
   },
 });
 
-export { fetchUserData };
-export const { initUserStatus, initUserErrorCode } = organizationSlice.actions;
+export {
+  createOrganization,
+  // deleteOrganization,
+  joinOrganization,
+  // leaveOrganization,
+};
+export const { initOrganizationStatus, initOrganizationErrorCode } =
+  organizationSlice.actions;
 export default organizationSlice.reducer;

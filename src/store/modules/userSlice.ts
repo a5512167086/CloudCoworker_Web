@@ -41,7 +41,6 @@ const registerUser = createAsyncThunk(
     };
     try {
       const response = await customRequest.post(`/api/v1/users/register`, user);
-      console.log(response.data);
       return response.data;
     } catch (error) {
       if (isAxiosError(error)) {

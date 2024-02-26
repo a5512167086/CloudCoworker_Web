@@ -6,10 +6,16 @@ import ApartmentIcon from '@mui/icons-material/Apartment';
 import Typography from '@mui/material/Typography';
 import { StyledCustomManageForm } from './customManageForm.style';
 import { useTranslation } from 'react-i18next';
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, FormEvent, useState } from 'react';
 import { ManageFormData, Status } from '@configs/type';
 import { isEmpty } from '@utils/helpers';
 import { MANAGE_FORM_KEYS } from '@configs/common';
+import { useDispatch } from 'react-redux';
+import {
+  createOrganization,
+  joinOrganization,
+} from '@store/modules/organizationSlice';
+import { AppDispatch } from '@store/index';
 
 const manageFormContent = {
   title1: 'manage.title1',
@@ -27,10 +33,10 @@ const initManageFormState: ManageFormData = {
 };
 
 export const CustomManageForm = () => {
+  const dispatch = useDispatch<AppDispatch>();
   const { t } = useTranslation();
   const [formData, setFormData] = useState(initManageFormState);
-
-  const handleManageFormBlur = (key: keyof ManageFormData) => {
+  const validInput = (key: keyof ManageFormData) => {
     let currentStatus = { status: Status.Success, errorText: '' };
     if (isEmpty(formData[key]!.value)) {
       currentStatus = {
@@ -47,6 +53,10 @@ export const CustomManageForm = () => {
     });
   };
 
+  const handleManageFormBlur = (key: keyof ManageFormData) => {
+    validInput(key);
+  };
+
   const handleManageFormChange = (
     event: ChangeEvent<HTMLInputElement>,
     key: keyof ManageFormData,
@@ -58,8 +68,21 @@ export const CustomManageForm = () => {
     });
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (
+    event: FormEvent<HTMLFormElement>,
+    key: keyof ManageFormData,
+  ) => {
     event.preventDefault();
+    validInput(key);
+    if (
+      formData[key]?.status === Status.Success &&
+      key === 'organizationName'
+    ) {
+      dispatch(createOrganization(formData[key]!.value));
+    }
+    if (formData[key]?.status === Status.Success && key === 'inviteCode') {
+      dispatch(joinOrganization(formData[key]!.value));
+    }
   };
 
   return (
@@ -71,7 +94,16 @@ export const CustomManageForm = () => {
         <Typography component='h1' variant='h5'>
           {t(manageFormContent.title1)}
         </Typography>
-        <Box width='100%' component='form' onSubmit={handleSubmit} noValidate>
+        <Box
+          width='100%'
+          component='form'
+          onSubmit={(event) => {
+            handleSubmit(
+              event as FormEvent<HTMLFormElement>,
+              MANAGE_FORM_KEYS.ORGANIZATION_NAME as keyof ManageFormData,
+            );
+          }}
+          noValidate>
           <TextField
             margin='normal'
             required
@@ -104,7 +136,16 @@ export const CustomManageForm = () => {
         <Typography component='h1' variant='h5' className='manage_or'>
           {t(manageFormContent.or)}
         </Typography>
-        <Box width='100%' component='form' onSubmit={handleSubmit} noValidate>
+        <Box
+          width='100%'
+          component='form'
+          onSubmit={(event) => {
+            handleSubmit(
+              event as FormEvent<HTMLFormElement>,
+              MANAGE_FORM_KEYS.INVITE_CODE as keyof ManageFormData,
+            );
+          }}
+          noValidate>
           <Typography component='h1' variant='h5'>
             {t(manageFormContent.title2)}
           </Typography>
