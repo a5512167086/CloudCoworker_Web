@@ -47,5 +47,9 @@
     "button2": "加入",
     "organizationName": "組織名稱",
     "inviteCode": "邀請碼"
+  },
+  "button": {
+    "delete": "刪除",
+    "leave": "離開"
   }
 }

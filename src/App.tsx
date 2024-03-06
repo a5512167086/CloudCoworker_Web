@@ -6,24 +6,34 @@ import { Box, CircularProgress, Container } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from './store';
 import { useEffect, useState } from 'react';
-import { checkIsAuth } from '@utils/helpers';
+import { checkIsAuth, isEmpty } from '@utils/helpers';
 import { checkUserLogin } from '@store/modules/userSlice';
+import { Status } from '@configs/type';
+import './index.css';
 
 const App = () => {
   const dispatch = useDispatch<AppDispatch>();
   const [initState, setInitState] = useState(true);
-  const { userName, userEmail, userToken } = useSelector(
+  const { userName, userEmail, userToken, status } = useSelector(
     (state: RootState) => state.user,
   );
+  const storageToken =
+    localStorage.getItem('userToken') || sessionStorage.getItem('userToken');
 
   useEffect(() => {
-    const storageToken =
-      localStorage.getItem('userToken') || sessionStorage.getItem('userToken');
     if (storageToken && !checkIsAuth(userName, userEmail, userToken!)) {
       dispatch(checkUserLogin(storageToken));
     }
-    setInitState(false);
   }, []);
+
+  useEffect(() => {
+    if (
+      isEmpty(storageToken) ||
+      (initState && status !== Status.Idle && userToken)
+    ) {
+      setInitState(false);
+    }
+  }, [userToken, status]);
 
   return initState ? (
     <Box

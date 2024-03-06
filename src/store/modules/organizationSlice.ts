@@ -81,8 +81,8 @@ export const organizationSlice = createSlice({
   initialState: {
     organizationId: '',
     organizationName: '',
-    organizationOwner: '',
-    organizationMembers: [],
+    organizationOwner: {} as { userEmail: string; userName: string },
+    organizationMembers: [] as { userEmail: string; userName: string }[],
     organizationInviteCode: '',
     status: 'idle',
     errorCode: null as number | null,
@@ -112,8 +112,6 @@ export const organizationSlice = createSlice({
       state.status = Status.Idle;
     });
     builder.addCase(getUserOrganization.fulfilled, (state, actions) => {
-      console.log('test');
-      console.log(actions.payload);
       const {
         organizationId,
         organizationMembers,

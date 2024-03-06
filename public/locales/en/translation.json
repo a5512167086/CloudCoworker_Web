@@ -47,5 +47,9 @@
     "button2": "Join",
     "organizationName": "Organization Name",
     "inviteCode": "Invite Code"
+  },
+  "button": {
+    "delete": "Delete",
+    "leave": "Leave"
   }
 }

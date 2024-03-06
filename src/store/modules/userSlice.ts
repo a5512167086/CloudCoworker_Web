@@ -73,7 +73,7 @@ export const userSlice = createSlice({
     userEmail: '',
     userToken: null as string | null,
     userOrganization: '',
-    organizationOwner: false,
+    isOrganizationOwner: false,
     status: 'idle',
     errorCode: null as number | null,
   },
@@ -97,7 +97,7 @@ export const userSlice = createSlice({
     setUserOrganization: (state, actions) => {
       const { organizationId, isOwner } = actions.payload;
       state.userOrganization = organizationId;
-      state.organizationOwner = isOwner;
+      state.isOrganizationOwner = isOwner;
     },
   },
   extraReducers: (builder) => {
@@ -136,11 +136,13 @@ export const userSlice = createSlice({
       state.userEmail = userEmail;
       state.userName = userName;
       state.userToken = token;
+      state.status = Status.Success;
     });
     builder.addCase(checkUserLogin.rejected, (state) => {
       state.userEmail = '';
       state.userName = '';
       state.userToken = '';
+      state.status = Status.Error;
     });
   },
 });
