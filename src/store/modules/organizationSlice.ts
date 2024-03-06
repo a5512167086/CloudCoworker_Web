@@ -25,10 +25,27 @@ const createOrganization = createAsyncThunk(
   },
 );
 
-// const deleteOrganization = createAsyncThunk(
-//   'organization/createOrganization',
-//   async (token, { rejectWithValue }) => {},
-// );
+const deleteOrganization = createAsyncThunk(
+  'organization/deleteOrganization',
+  async (_: void, { getState, rejectWithValue }) => {
+    try {
+      const state = getState();
+      const { userToken } = (state as RootState).user;
+      const response = await customRequest.post(
+        `/api/v1/organization/delete`,
+        {},
+        {
+          headers: { Authorization: `Bearer ${userToken}` },
+        },
+      );
+      return response.data;
+    } catch (error) {
+      if (isAxiosError(error)) {
+        return rejectWithValue(error.response!.data);
+      }
+    }
+  },
+);
 
 const joinOrganization = createAsyncThunk(
   'organization/joinOrganization',
@@ -50,10 +67,27 @@ const joinOrganization = createAsyncThunk(
   },
 );
 
-// const leaveOrganization = createAsyncThunk(
-//   'organization/createOrganization',
-//   async (token, { rejectWithValue }) => {},
-// );
+const leaveOrganization = createAsyncThunk(
+  'organization/leaveOrganization',
+  async (_: void, { getState, rejectWithValue }) => {
+    try {
+      const state = getState();
+      const { userToken } = (state as RootState).user;
+      const response = await customRequest.post(
+        `/api/v1/organization/leave`,
+        {},
+        {
+          headers: { Authorization: `Bearer ${userToken}` },
+        },
+      );
+      return response.data;
+    } catch (error) {
+      if (isAxiosError(error)) {
+        return rejectWithValue(error.response!.data);
+      }
+    }
+  },
+);
 
 const getUserOrganization = createAsyncThunk(
   'organization/getUserOrganization',
@@ -69,6 +103,8 @@ const getUserOrganization = createAsyncThunk(
       dispatch(setUserOrganization({ organizationId, isOwner }));
       return response.data;
     } catch (error) {
+      // eslint-disable-next-line no-use-before-define
+      dispatch(initOrganizationState());
       if (isAxiosError(error)) {
         return rejectWithValue(error.response!.data);
       }
@@ -94,6 +130,13 @@ export const organizationSlice = createSlice({
     initOrganizationErrorCode: (state) => {
       state.errorCode = null;
     },
+    initOrganizationState: (state) => {
+      state.organizationId = '';
+      state.organizationName = '';
+      state.organizationOwner = { userEmail: '', userName: '' };
+      state.organizationMembers = [];
+      state.organizationInviteCode = '';
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(createOrganization.pending, (state) => {
@@ -104,6 +147,42 @@ export const organizationSlice = createSlice({
       state.errorCode = null;
     });
     builder.addCase(createOrganization.rejected, (state, actions) => {
+      const { statusCode } = actions.payload as RejectResponseData;
+      state.status = Status.Error;
+      state.errorCode = statusCode;
+    });
+    builder.addCase(joinOrganization.pending, (state) => {
+      state.status = Status.Idle;
+    });
+    builder.addCase(joinOrganization.fulfilled, (state) => {
+      state.status = Status.Success;
+      state.errorCode = null;
+    });
+    builder.addCase(joinOrganization.rejected, (state, actions) => {
+      const { statusCode } = actions.payload as RejectResponseData;
+      state.status = Status.Error;
+      state.errorCode = statusCode;
+    });
+    builder.addCase(deleteOrganization.pending, (state) => {
+      state.status = Status.Idle;
+    });
+    builder.addCase(deleteOrganization.fulfilled, (state) => {
+      state.status = Status.Success;
+      state.errorCode = null;
+    });
+    builder.addCase(deleteOrganization.rejected, (state, actions) => {
+      const { statusCode } = actions.payload as RejectResponseData;
+      state.status = Status.Error;
+      state.errorCode = statusCode;
+    });
+    builder.addCase(leaveOrganization.pending, (state) => {
+      state.status = Status.Idle;
+    });
+    builder.addCase(leaveOrganization.fulfilled, (state) => {
+      state.status = Status.Success;
+      state.errorCode = null;
+    });
+    builder.addCase(leaveOrganization.rejected, (state, actions) => {
       const { statusCode } = actions.payload as RejectResponseData;
       state.status = Status.Error;
       state.errorCode = statusCode;
@@ -138,11 +217,14 @@ export const organizationSlice = createSlice({
 
 export {
   createOrganization,
-  // deleteOrganization,
+  deleteOrganization,
   joinOrganization,
-  // leaveOrganization,
+  leaveOrganization,
   getUserOrganization,
 };
-export const { initOrganizationStatus, initOrganizationErrorCode } =
-  organizationSlice.actions;
+export const {
+  initOrganizationStatus,
+  initOrganizationErrorCode,
+  initOrganizationState,
+} = organizationSlice.actions;
 export default organizationSlice.reducer;

@@ -13,6 +13,7 @@ import { MANAGE_FORM_KEYS } from '@configs/common';
 import { useDispatch } from 'react-redux';
 import {
   createOrganization,
+  getUserOrganization,
   joinOrganization,
 } from '@store/modules/organizationSlice';
 import { AppDispatch } from '@store/index';
@@ -68,7 +69,7 @@ export const CustomManageForm = () => {
     });
   };
 
-  const handleSubmit = (
+  const handleSubmit = async (
     event: FormEvent<HTMLFormElement>,
     key: keyof ManageFormData,
   ) => {
@@ -78,11 +79,12 @@ export const CustomManageForm = () => {
       formData[key]?.status === Status.Success &&
       key === 'organizationName'
     ) {
-      dispatch(createOrganization(formData[key]!.value));
+      await dispatch(createOrganization(formData[key]!.value));
     }
     if (formData[key]?.status === Status.Success && key === 'inviteCode') {
-      dispatch(joinOrganization(formData[key]!.value));
+      await dispatch(joinOrganization(formData[key]!.value));
     }
+    await dispatch(getUserOrganization());
   };
 
   return (

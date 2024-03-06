@@ -14,6 +14,7 @@ export const PAGE_PATHS = {
   REGISTER: '/register',
   FORGOT_PASSWORD: '/forgot-password',
   MANAGE: '/manage',
+  CHAT_ROOM: '/chatroom',
 };
 
 export const GetRoutes = () => {

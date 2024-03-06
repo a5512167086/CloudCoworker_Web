@@ -18,6 +18,10 @@ export const ROUTES_WITHOUT_AUTH = [
 
 export const ROUTES_WITH_AUTH = [
   {
+    title: 'header.page_title.chatroom',
+    link: PAGE_PATHS.CHAT_ROOM,
+  },
+  {
     title: 'header.page_title.manage',
     link: PAGE_PATHS.MANAGE,
   },

@@ -15,6 +15,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@store/index';
 import { checkIsAuth } from '@utils/helpers';
 import { initUserState } from '@store/modules/userSlice';
+import { initOrganizationState } from '@store/modules/organizationSlice';
 
 export const CustomHeader = () => {
   const container = document.querySelector('#root');
@@ -33,6 +34,7 @@ export const CustomHeader = () => {
     } else if (isAuth && title.includes('logout') && link === '') {
       // handle logout
       dispatch(initUserState());
+      dispatch(initOrganizationState());
       navigate(PAGE_PATHS.BASE);
     } else {
       navigate(link);

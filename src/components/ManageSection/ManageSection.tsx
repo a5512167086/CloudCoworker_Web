@@ -1,5 +1,5 @@
-import { RootState } from '@store/index';
-import { useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '@store/index';
+import { useDispatch, useSelector } from 'react-redux';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
@@ -12,6 +12,11 @@ import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import ApartmentIcon from '@mui/icons-material/Apartment';
 import { Button } from '@mui/material';
 import { useTranslation } from 'react-i18next';
+import {
+  deleteOrganization,
+  getUserOrganization,
+  leaveOrganization,
+} from '@store/modules/organizationSlice';
 
 const manageContent = {
   button: {
@@ -29,6 +34,15 @@ export const ManageSection = () => {
   } = useSelector((state: RootState) => state.organization);
   const { isOrganizationOwner } = useSelector((state: RootState) => state.user);
   const { t } = useTranslation();
+  const dispatch = useDispatch<AppDispatch>();
+  const hanldeDelete = async () => {
+    await dispatch(deleteOrganization());
+    await dispatch(getUserOrganization());
+  };
+  const hanldeLeave = async () => {
+    await dispatch(leaveOrganization());
+    await dispatch(getUserOrganization());
+  };
 
   return (
     <StyledManageSection>
@@ -44,14 +58,20 @@ export const ManageSection = () => {
               <Button
                 className='manage_deleteButton'
                 variant='contained'
-                color='error'>
+                color='error'
+                onClick={() => {
+                  hanldeDelete();
+                }}>
                 {t(manageContent.button.delete)}
               </Button>
             ) : (
               <Button
                 className='manage_deleteButton'
                 variant='contained'
-                color='error'>
+                color='error'
+                onClick={() => {
+                  hanldeLeave();
+                }}>
                 {t(manageContent.button.leave)}
               </Button>
             )}

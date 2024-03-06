@@ -27,12 +27,12 @@ const featureSetContent = [
 
 export const FeatureCardSection = () => (
   <StyledFeatureCardSection>
-    {featureSetContent.map(({ title, description, cardImgSrc }) => (
+    {featureSetContent.map(({ title, description, cardImgSrc }, index) => (
       <CustomFeatureCard
         title={title}
         description={description}
         cardImgSrc={cardImgSrc}
-        key={title}
+        key={title + index}
       />
     ))}
   </StyledFeatureCardSection>
